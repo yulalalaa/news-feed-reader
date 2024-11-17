@@ -22,7 +22,12 @@ app.get('/api/news', async (req, res) => {
         language: 'en',
       }
     });
-    res.json(response.data.articles);
+
+    // Filter out articles with '[Removed]' in title or description
+    const filteredArticles = response.data.articles.filter(article =>
+      article.title && article.description && article.title !== '[Removed]' && article.description !== '[Removed]'
+    );
+    res.json(filteredArticles);
   } catch (error) {
     console.error('Error fetching news:', error);
     res.status(500).json({ error: 'Failed to fetch news' });
@@ -32,3 +37,33 @@ app.get('/api/news', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+let bookmarks = [];
+
+// Route to add a bookmark
+app.post('/api/bookmarks', (req, res) => {
+  const article = req.body;
+  if (!bookmarks.some(b => b.url === article.url)) {
+    bookmarks.push(article);
+  }
+  res.status(201).json({ success: true, message: 'Article bookmarked successfully!' });
+});
+
+// Route to get all bookmarks
+app.get('/api/bookmarks', (req, res) => {
+  res.json(bookmarks);
+});
+
+// Route to delete a bookmark
+app.delete('/api/bookmarks', (req, res) => {
+  const { url } = req.body; // Extract the URL from the request body
+  const initialLength = bookmarks.length;
+  bookmarks = bookmarks.filter(bookmark => bookmark.url !== url); // Remove the bookmark with matching URL
+  if (bookmarks.length < initialLength) {
+    res.status(200).json({ success: true, message: 'Bookmark deleted successfully!' });
+  } else {
+    res.status(404).json({ success: false, message: 'Bookmark not found!' });
+  }
+});
+
+
