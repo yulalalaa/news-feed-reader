@@ -21,7 +21,24 @@ function Feed() {
     }
   }, [viewBookmarks, topic]);
 
+  /*const handleBookmark = (post) => {
+    axios.post('http://localhost:5000/api/bookmarks', post)
+      .then(() => {
+        setNotification('Article bookmarked successfully!');
+        setTimeout(() => setNotification(''), 3000);
+      })
+      .catch(error => {
+        console.error('Error bookmarking article:', error);
+        setNotification('Failed to bookmark the article.');
+        setTimeout(() => setNotification(''), 3000);
+      });
+  };*/
+
   const handleBookmark = (post) => {
+    // Immediately update bookmarks state to reflect the change
+    setBookmarks((prevBookmarks) => [...prevBookmarks, post]);
+  
+    // Then send the request to the server
     axios.post('http://localhost:5000/api/bookmarks', post)
       .then(() => {
         setNotification('Article bookmarked successfully!');
@@ -33,6 +50,7 @@ function Feed() {
         setTimeout(() => setNotification(''), 3000);
       });
   };
+  
 
   const handleDeleteBookmark = (url) => {
     axios.delete('http://localhost:5000/api/bookmarks', { data: { url } })

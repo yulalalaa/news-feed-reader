@@ -19,14 +19,17 @@ function Post({ title, content, url, imageUrl, onBookmark, onDeleteBookmark, isB
           Read More
         </a>
         {!viewBookmarks && (
+      
           <button
-            className="btn btn-secondary me-2"
-            onClick={onBookmark}
-            disabled={isBookmarked}
-            aria-label={isBookmarked ? 'Article already bookmarked' : 'Bookmark this article'}
+          className="btn btn-secondary me-2"
+          onClick={onBookmark}
+          disabled={isBookmarked}
+          aria-label={isBookmarked ? 'Article already bookmarked' : 'Bookmark this article'}
           >
-            {isBookmarked ? 'Bookmarked' : 'Bookmark'}
+          {isBookmarked ? 'Bookmarked' : 'Bookmark'}
           </button>
+
+
         )}
         {viewBookmarks && (
           <button
